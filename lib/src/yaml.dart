@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:openapi_model_cli/src/gen_model.dart';
 import 'package:yaml/yaml.dart';
 
 class YamlHelper {
@@ -8,10 +9,6 @@ class YamlHelper {
   Map? yaml;
 
   YamlHelper(this.fileName);
-
-  void genModel(String name, Map data) {
-    print(name);
-  }
 
   Future<bool> parseFile() async {
     try {
@@ -25,7 +22,8 @@ class YamlHelper {
       schemas.forEach(
         (key, value) {
           print('Schema $key with $value');
-          genModel(key, value);
+          GenModel genModel = GenModel(key, value);
+          genModel.testMustache();
         },
       );
     } catch (e) {
