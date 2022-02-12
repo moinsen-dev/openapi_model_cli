@@ -1,7 +1,7 @@
-import 'package:openapi_model_cli/openapi_model_cli.dart';
+import 'package:openapi_model_cli/src/_index.dart';
 
 void main(List<String> arguments) {
-  Args args = Args(arguments);
+  App app = App(arguments);
 
-  args.start();
+  app();
 }
