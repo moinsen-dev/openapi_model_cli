@@ -9,7 +9,12 @@
       "request": "launch",
       "type": "dart",
       "program": "${workspaceRoot}/bin/openapi2model_cli_dev.dart",
-      "args": ["--input", "openapi-spec.yaml", "--output", "example_api2"]
+      "args": [
+        "--input",
+        "openapi-spec.yaml",
+        "--output",
+        "../quizchallenge/api/quizchallenge_api"
+      ]
     }
   ]
 }

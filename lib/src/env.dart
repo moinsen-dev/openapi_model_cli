@@ -2,9 +2,8 @@ import 'package:args/args.dart';
 
 class Env {
   Env(
-    this.argResults, {
-    this.workingDirectory = '../temp',
-  });
+    this.argResults,
+  );
 
   final ArgResults argResults;
 
@@ -14,8 +13,5 @@ class Env {
 
   final templateFolder = 'templates/dart/package';
 
-  final String? workingDirectory;
-
-  String get projectPath =>
-      (workingDirectory != null ? '$workingDirectory/' : '') + projectName;
+  String get projectPath => projectName;
 }

@@ -12,10 +12,6 @@ class GenModel {
   final String name;
   final YamlMap data;
 
-  String get projectPath =>
-      (env.workingDirectory != null ? '${env.workingDirectory}/' : '') +
-      env.projectName;
-
   void _writeModelFile({
     required String path,
     required String fileName,
@@ -48,6 +44,41 @@ class {{ className }} with _{{ dollarClassName }} {
 	''';
 
     var template = Template(_dartModelFile);
+
+    var output = template.renderString(
+      {
+        'fileName': schemaName.toLowerCase(),
+        'className': schemaName,
+        'dollarClassName': '\$$schemaName',
+        'attrs': attrs,
+      },
+    );
+
+    File('$path$fileName').writeAsStringSync(output);
+
+    File('${path}_index.dart').writeAsStringSync(
+      'export \'$fileName\';\n',
+      mode: FileMode.append,
+    );
+  }
+
+  void _writeEnumFile({
+    required String path,
+    required String fileName,
+    required String schemaName,
+    required List<Map<String, dynamic>> attrs,
+  }) {
+    final _dartEnumFile = '''
+
+  enum {{ className }} {
+    {{# attrs }}
+      {{ name }},
+    {{/ attrs }}
+  }
+
+	''';
+
+    var template = Template(_dartEnumFile);
 
     var output = template.renderString(
       {
@@ -106,6 +137,21 @@ class {{ className }} with _{{ dollarClassName }} {
     return result;
   }
 
+  List<Map<String, dynamic>> _enumList2Args(YamlList enumList) {
+    List<Map<String, dynamic>> result = [];
+
+    for (var propName in enumList) {
+      Map<String, dynamic> attr = {
+        'name': propName,
+        'type': propName,
+        'default': '',
+      };
+      result.add(attr);
+    }
+
+    return result;
+  }
+
   void generateModel() {
     print('generateModel $name');
 
@@ -114,34 +160,19 @@ class {{ className }} with _{{ dollarClassName }} {
     var modelProperties = data['properties'];
     var modelRequired = data['required'];
 
-    if (modelEnum == null) {
+    if (modelEnum != null) {
+      _writeEnumFile(
+        schemaName: name,
+        path: '${env.projectPath}/lib/models/',
+        fileName: '${name.toLowerCase()}.dart',
+        attrs: _enumList2Args(modelEnum),
+      );
+    } else {
       _writeModelFile(
         schemaName: name,
         path: '${env.projectPath}/lib/models/',
         fileName: '${name.toLowerCase()}.dart',
         attrs: _properties2Args(modelProperties),
-        // attrs: [
-        //   {
-        //     'name': 'id',
-        //     'type': 'String?',
-        //     'default': '',
-        //   },
-        //   {
-        //     'name': 'name',
-        //     'type': 'String?',
-        //     'default': '',
-        //   },
-        //   {
-        //     'name': 'description',
-        //     'type': 'String',
-        //     'default': '@Default(\'\') ',
-        //   },
-        //   {
-        //     'name': 'game',
-        //     'type': 'Game',
-        //     'default': '',
-        //   },
-        // ],
       );
     }
   }

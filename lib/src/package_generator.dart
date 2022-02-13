@@ -35,6 +35,7 @@ class PackageGenerator {
     return true;
   }
 
+/*
   void _prepareWorkingDirectory() {
     if (Directory(env.workingDirectory!).existsSync()) {
       Directory(env.workingDirectory!).deleteSync(
@@ -44,7 +45,7 @@ class PackageGenerator {
 
     Directory(env.workingDirectory!).createSync(recursive: true);
   }
-
+*/
   void _createFlutterPackage() {
     _executeCommand(
       'flutter',
@@ -54,7 +55,6 @@ class PackageGenerator {
         '--template=package',
         env.projectName,
       ],
-      workingDirectory: env.workingDirectory,
     );
   }
 
@@ -110,8 +110,6 @@ class PackageGenerator {
 
   void call() {
     print('Generate project ${env.projectName}');
-
-    _prepareWorkingDirectory();
 
     _createFlutterPackage();
 
