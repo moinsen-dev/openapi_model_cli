@@ -1,6 +1,8 @@
 import 'package:args/args.dart';
-import 'package:openapi_model_cli/src/generator.dart';
 import 'package:openapi_model_cli/src/yaml.dart';
+
+import 'env.dart';
+import 'package_generator.dart';
 
 class App {
   ArgResults? argResults;
@@ -28,13 +30,16 @@ class App {
   void call() {
     _init();
 
-    YamlHelper yamlHelper = YamlHelper(
-      argResults!['input'],
-    );
+    assert(argResults != null, 'Empty arguments');
 
-    yamlHelper.parseFile();
+    Env env = Env(argResults!);
 
-    Generator gen = Generator(projectName: argResults!['output']);
-    gen();
+    PackageGenerator packageGenerator = PackageGenerator(env);
+    packageGenerator();
+
+    YamlHelper yamlHelper = YamlHelper(env);
+    yamlHelper.generateFiles();
+
+    packageGenerator.buildModels();
   }
 }

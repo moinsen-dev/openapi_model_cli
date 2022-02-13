@@ -3,34 +3,32 @@ import 'dart:io';
 import 'package:openapi_model_cli/src/gen_model.dart';
 import 'package:yaml/yaml.dart';
 
+import 'env.dart';
+
 class YamlHelper {
-  final String fileName;
+  final Env env;
 
   Map? yaml;
 
-  YamlHelper(this.fileName);
+  YamlHelper(this.env);
 
-  Future<bool> parseFile() async {
+  void generateFiles() {
     try {
-      var myFile = File(fileName);
+      var myFile = File(env.specName);
 
-      String yamlString = await myFile.readAsString();
+      String yamlString = myFile.readAsStringSync();
       yaml = loadYaml(yamlString) as Map;
 
       Map schemas = yaml?['components']?['schemas'] ?? {};
 
       schemas.forEach(
         (key, value) {
-          print('Schema $key with $value');
-          GenModel genModel = GenModel(key, value);
-          genModel.testMustache();
+          GenModel genModel = GenModel(env, key, value);
+          genModel.generateModel();
         },
       );
     } catch (e) {
       print(e);
-      return false;
     }
-
-    return true;
   }
 }

@@ -1,0 +1,24 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    avoid_print: false # Uncomment to disable the `avoid_print` rule
+    prefer_single_quotes: true # Uncomment to enable the `prefer_single_quotes` rule
+    always_declare_return_types: true
+    unawaited_futures: true
+    unsafe_html: true
+    constant_identifier_names: false
+    unnecessary_brace_in_string_interps: false
+    non_constant_identifier_names: false
+
+analyzer:
+  enable-experiment:
+    - non-nullable
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - test/*
+    - e2e/*
+  strong-mode:
+    implicit-casts: true
+    implicit-dynamic: true
