@@ -16,7 +16,9 @@ class PackageGenerator {
     List<String> args = const [],
     String? workingDirectory,
   }) {
-    print('Execute $command in $workingDirectory  ${args.toString()}');
+    print(
+      'Execute $command ${workingDirectory != null ? "in $workingDirectory" : ""}  ${args.toString()}',
+    );
 
     try {
       var result = Process.runSync(
@@ -35,17 +37,6 @@ class PackageGenerator {
     return true;
   }
 
-/*
-  void _prepareWorkingDirectory() {
-    if (Directory(env.workingDirectory!).existsSync()) {
-      Directory(env.workingDirectory!).deleteSync(
-        recursive: true,
-      );
-    }
-
-    Directory(env.workingDirectory!).createSync(recursive: true);
-  }
-*/
   void _createFlutterPackage() {
     _executeCommand(
       'flutter',
@@ -62,7 +53,7 @@ class PackageGenerator {
     _executeCommand('sed',
         args: [
           "-i ''",
-          's/^name: example_api/name: ${env.projectName}/g',
+          's/^name: example_api/name: ${basename(env.projectName)}/g',
           'pubspec.yaml',
         ],
         workingDirectory: env.projectPath);

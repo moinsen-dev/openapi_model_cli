@@ -1,2 +1,9 @@
-A sample command-line application with an entrypoint in `bin/`, library code
-in `lib/`, and example unit test in `test/`.
+# Installation
+
+## Local:
+
+dart pub global activate -spath .
+
+# Usage
+
+openapi_model_cli

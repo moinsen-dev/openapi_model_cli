@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:args/args.dart';
 import 'package:openapi_model_cli/src/yaml.dart';
 
@@ -7,39 +9,62 @@ import 'package_generator.dart';
 class App {
   ArgResults? argResults;
 
-  App(this.args);
-  final List<String> args;
+  App(this.arguments);
+  final List<String> arguments;
 
-  void _init() {
+  bool _init() {
+    exitCode = 0;
+
     var parser = ArgParser()
-      ..addFlag('clean', abbr: 'x')
+      ..addFlag(
+        'update',
+        abbr: 'u',
+        help: 'Only the model files will be regenerated.',
+      )
       ..addOption(
         'output',
         abbr: 'o',
         mandatory: true,
+        help: 'Name of the flutter dart package with the generated modesl.',
+        valueHelp: 'FILE',
       )
       ..addOption(
         'input',
         abbr: 'i',
         mandatory: true,
+        help: 'YAML Open Api input spec file.',
+        valueHelp: 'FILE',
       );
 
-    argResults = parser.parse(args);
+    try {
+      argResults = parser.parse(arguments);
+    } catch (e) {
+      exitCode = 1;
+      stdout.writeln(parser.usage);
+      return false;
+    }
+
+    return true;
   }
 
   void call() {
-    _init();
+    if (_init()) {
+      Env env = Env(argResults!);
 
-    assert(argResults != null, 'Empty arguments');
+      bool updateModels = argResults?['update'];
 
-    Env env = Env(argResults!);
+      PackageGenerator packageGenerator = PackageGenerator(env);
 
-    PackageGenerator packageGenerator = PackageGenerator(env);
-    packageGenerator();
+      if (!updateModels) {
+        packageGenerator();
+      }
 
-    YamlHelper yamlHelper = YamlHelper(env);
-    yamlHelper.generateFiles();
+      YamlHelper yamlHelper = YamlHelper(env);
+      yamlHelper.generateFiles();
 
-    packageGenerator.buildModels();
+      if (!updateModels) {
+        packageGenerator.buildModels();
+      }
+    }
   }
 }

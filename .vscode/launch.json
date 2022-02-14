@@ -8,7 +8,7 @@
       "name": "openapi_model_cli",
       "request": "launch",
       "type": "dart",
-      "program": "${workspaceRoot}/bin/openapi2model_cli_dev.dart",
+      "program": "${workspaceRoot}/bin/openapi2model_cli.dart",
       "args": [
         "--input",
         "openapi-spec.yaml",
