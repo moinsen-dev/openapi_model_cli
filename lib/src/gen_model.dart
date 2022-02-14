@@ -28,7 +28,7 @@ part '{{ fileName }}.freezed.dart';
 part '{{ fileName }}.g.dart';
 
 @freezed
-class {{ className }} with _{{ dollarClassName }} extends BaseModel {
+class {{ className }} extends BaseModel with _{{ dollarClassName }} {
   {{# attrs }}
   static const attr_{{ name }} = '{{ name }}';
   {{/ attrs }}
