@@ -43,7 +43,7 @@ class {{ className }} with _{{ dollarClassName }} {
 }
 	''';
 
-    var template = Template(_dartModelFile);
+    var template = Template(_dartModelFile, htmlEscapeValues: false);
 
     var output = template.renderString(
       {
@@ -78,7 +78,7 @@ class {{ className }} with _{{ dollarClassName }} {
 
 	''';
 
-    var template = Template(_dartEnumFile);
+    var template = Template(_dartEnumFile, htmlEscapeValues: false);
 
     var output = template.renderString(
       {
@@ -103,11 +103,15 @@ class {{ className }} with _{{ dollarClassName }} {
     modelProperties.forEach(
       (propName, propData) {
         String propType = propData['type'] ?? 'string';
-        String propFormat = propData['format'] ?? 'string';
+        String? propFormat = propData['format'];
+        dynamic propDefault = propData['default'];
         String? propRef = propData['\$ref'];
         String attrType = 'String?';
+        String attrDefault = '';
 
         // TODO Handle propFormat date-time
+
+        // TODO Gen enum type
 
         if (propRef != null) {
           final ref = propRef.split('/').last;
@@ -115,9 +119,15 @@ class {{ className }} with _{{ dollarClassName }} {
         } else {
           switch (propType) {
             case 'integer':
+              if (propDefault != null) {
+                attrDefault = '@Default(${propDefault.toString()}) ';
+              }
               attrType = 'int?';
               break;
             case 'string':
+              if (propDefault != null) {
+                attrDefault = '@Default(\'${propDefault.toString()}\') ';
+              }
               attrType = 'String?';
               break;
             default:
@@ -128,7 +138,7 @@ class {{ className }} with _{{ dollarClassName }} {
         Map<String, dynamic> attr = {
           'name': propName,
           'type': attrType,
-          'default': '',
+          'default': attrDefault,
         };
         result.add(attr);
       },

@@ -10,6 +10,7 @@
       "type": "dart",
       "program": "${workspaceRoot}/bin/openapi2model_cli.dart",
       "args": [
+        "-u",
         "--input",
         "openapi-spec.yaml",
         "--output",

@@ -21,6 +21,8 @@ class YamlHelper {
 
       Map schemas = yaml?['components']?['schemas'] ?? {};
 
+      // TODO Cleanup model/_index.dart
+
       schemas.forEach(
         (key, value) {
           GenModel genModel = GenModel(env, key, value);
