@@ -28,13 +28,14 @@ part '{{ fileName }}.freezed.dart';
 part '{{ fileName }}.g.dart';
 
 @freezed
-class {{ className }} with _{{ dollarClassName }} {
+class {{ className }} with _{{ dollarClassName }} extends BaseModel {
   {{# attrs }}
   static const attr_{{ name }} = '{{ name }}';
   {{/ attrs }}
 
   factory {{ className }}({
   {{# attrs }}
+   {{ description }}
    {{ default }}{{ type }} {{ name }},
   {{/ attrs }}
   }) = _{{ className }};      
@@ -72,6 +73,7 @@ class {{ className }} with _{{ dollarClassName }} {
 
   enum {{ className }} {
     {{# attrs }}
+      {{ description }}
       {{ name }},
     {{/ attrs }}
   }
@@ -106,6 +108,7 @@ class {{ className }} with _{{ dollarClassName }} {
         String? propFormat = propData['format'];
         dynamic propDefault = propData['default'];
         String? propRef = propData['\$ref'];
+        String? propDescription = propData['description'];
         String attrType = 'String?';
         String attrDefault = '';
 
@@ -138,6 +141,7 @@ class {{ className }} with _{{ dollarClassName }} {
         Map<String, dynamic> attr = {
           'name': propName,
           'type': attrType,
+          'description': propDescription != null ? '/// $propDescription' : '',
           'default': attrDefault,
         };
         result.add(attr);
@@ -154,6 +158,7 @@ class {{ className }} with _{{ dollarClassName }} {
       Map<String, dynamic> attr = {
         'name': propName,
         'type': propName,
+        'description': '',
         'default': '',
       };
       result.add(attr);

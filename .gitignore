@@ -4,7 +4,3 @@
 
 # Conventional directory for build output.
 build/
-
-openapi-spec.yaml
-
-temp/
