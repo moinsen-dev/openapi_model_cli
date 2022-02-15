@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:openapi_model_cli/src/yaml.dart';
 
 import 'env.dart';
-import 'package_generator.dart';
+import 'schema_manager.dart';
+import 'yaml.dart';
 
 class App {
   ArgResults? argResults;
@@ -51,20 +51,10 @@ class App {
     if (_init()) {
       Env env = Env(argResults!);
 
-      bool updateModels = argResults?['update'];
-
-      PackageGenerator packageGenerator = PackageGenerator(env);
-
-      if (!updateModels) {
-        packageGenerator();
-      }
+      SchemaManager schemaManager = SchemaManager(env);
 
       YamlHelper yamlHelper = YamlHelper(env);
       yamlHelper.generateFiles();
-
-      if (!updateModels) {
-        packageGenerator.buildModels();
-      }
     }
   }
 }

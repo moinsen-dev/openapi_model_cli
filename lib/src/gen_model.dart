@@ -116,6 +116,8 @@ class {{ className }} extends BaseModel with _{{ dollarClassName }} {
 
         // TODO Gen enum type
 
+        // TODO Support more types
+
         if (propRef != null) {
           final ref = propRef.split('/').last;
           attrType = '$ref?';
