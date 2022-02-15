@@ -14,4 +14,8 @@ class MustacheArgs {
     required this.schemaName,
     required this.attrs,
   });
+
+  List<Map<String, dynamic>> values() {
+    return attrs.map((e) => e.values()).toList();
+  }
 }

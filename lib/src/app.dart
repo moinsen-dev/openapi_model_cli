@@ -52,6 +52,7 @@ class App {
       Env env = Env(argResults!);
 
       SchemaManager schemaManager = SchemaManager(env);
+      schemaManager.generateFiles();
 
       YamlHelper yamlHelper = YamlHelper(env);
       yamlHelper.generateFiles();

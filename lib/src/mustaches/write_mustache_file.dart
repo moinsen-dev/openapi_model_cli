@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:mustache_template/mustache.dart';
-import 'package:openapi_model_cli/src/mustaches/index.dart';
+import 'package:openapi_model_cli/src/mustaches/_index.dart';
 
 void writeMustacheFile(
   MustacheArgs args, {
@@ -17,7 +17,7 @@ void writeMustacheFile(
       'fileName': args.schemaName.toLowerCase(),
       'className': args.schemaName,
       'dollarClassName': '\$${args.schemaName}',
-      'attrs': args.attrs,
+      'attrs': args.values(),
     },
   );
 

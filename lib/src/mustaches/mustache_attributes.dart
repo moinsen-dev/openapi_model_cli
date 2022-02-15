@@ -2,12 +2,21 @@ class MustacheAttribute {
   final String name;
   final String type;
   final String description;
-  final String defaultVlaue;
+  final String defaultValue;
 
   MustacheAttribute({
     required this.name,
-    required this.type,
-    required this.description,
-    required this.defaultVlaue,
+    this.type = '',
+    this.description = '',
+    this.defaultValue = '',
   });
+
+  Map<String, dynamic> values() {
+    return {
+      'name': name,
+      'description': description,
+      'default': defaultValue,
+      'type': type,
+    };
+  }
 }
