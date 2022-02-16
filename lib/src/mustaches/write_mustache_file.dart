@@ -19,16 +19,6 @@ void writeMustacheFile(
   var template = Template(
     args.mustacheFileName,
     htmlEscapeValues: false,
-    partialResolver: (path) {
-      var resolvedFile = File(includePath + '/' + path);
-      if (resolvedFile.existsSync()) {
-        var resolvedString = resolvedFile.readAsStringSync();
-        return Template(resolvedString);
-      } else {
-        throw ArgumentError(
-            'Trying to include file "$path" at "${resolvedFile.absolute.path}" but no file found. Hint: You can configure the base include path with the "includePath" parameter.');
-      }
-    },
   );
 
   var output = template.renderString(

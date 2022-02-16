@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 
 import 'env.dart';
-import 'schema_manager.dart';
-import 'yaml.dart';
+import 'schema/schema_manager.dart';
 
 class App {
   ArgResults? argResults;
@@ -53,9 +52,6 @@ class App {
 
       SchemaManager schemaManager = SchemaManager(env);
       schemaManager.generateFiles();
-
-      YamlHelper yamlHelper = YamlHelper(env);
-      yamlHelper.generateFiles();
     }
   }
 }

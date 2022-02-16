@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:mustache_template/mustache.dart';
 import 'package:yaml/yaml.dart';
 
-import 'env.dart';
+import '../env.dart';
 
 class GenModel {
   GenModel(this.env, this.name, this.data);

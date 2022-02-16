@@ -1,8 +1,7 @@
 import 'package:openapi_model_cli/src/env.dart';
-import 'package:openapi_model_cli/src/schema.dart';
-import 'package:yaml/yaml.dart';
 
-import 'mustaches/_index.dart';
+import '../mustaches/_index.dart';
+import 'schema.dart';
 
 class SchemaManager {
   final Env env;
@@ -25,22 +24,20 @@ class SchemaManager {
     return schemes.firstWhere((element) => element.name == name);
   }
 
-  List<MustacheAttribute> mustacheAttributes(String schemaName) {
-    final schema = byName(schemaName);
-
+  List<MustacheAttribute> mustacheAttributes(Schema schema) {
     if (schema.isEnum && (schema.enumProperties?.isNotEmpty ?? false)) {
-      return _enumValue2List(schema.enumProperties!);
+      return _enumValue2List(schema);
     } else if (!schema.isEnum && (schema.attrProperties?.isNotEmpty ?? false)) {
-      return _properties2List(schema.attrProperties!);
+      return _properties2List(schema);
     }
 
     return [];
   }
 
-  List<MustacheAttribute> _enumValue2List(List<dynamic> data) {
+  List<MustacheAttribute> _enumValue2List(Schema schema) {
     List<MustacheAttribute> result = [];
 
-    for (var name in data) {
+    for (var name in schema.enumProperties!) {
       result.add(
         MustacheAttribute(name: name),
       );
@@ -49,18 +46,26 @@ class SchemaManager {
     return result;
   }
 
-  List<MustacheAttribute> _properties2List(YamlMap data) {
+  List<MustacheAttribute> _properties2List(Schema schema) {
     List<MustacheAttribute> result = [];
 
-    data.forEach(
+    schema.attrProperties?.forEach(
       (propName, propData) {
         String propType = propData['type'] ?? 'string';
         String? propFormat = propData['format'];
         dynamic propDefault = propData['default'];
-        String? propRef = propData['\$ref'];
+        String? propRef = propData['\$ref']?.split('/').last;
+        Schema? propRefSchema;
         String? propDescription = propData['description'];
-        String attrType = 'String?';
+        String attrType = propType;
+        bool attrIsEnum = false;
         String attrDefault = '';
+
+        if (propRef != null) {
+          propRefSchema = byName(propRef);
+          attrIsEnum = propRefSchema.isEnum;
+          propType = 'enum';
+        }
 
         // TODO Handle propFormat date-time
 
@@ -68,26 +73,26 @@ class SchemaManager {
 
         // TODO Support more types
 
-        if (propRef != null) {
-          final ref = propRef.split('/').last;
-          attrType = '$ref?';
-        } else {
-          switch (propType) {
-            case 'integer':
-              if (propDefault != null) {
-                attrDefault = '@Default(${propDefault.toString()}) ';
-              }
-              attrType = 'int?';
-              break;
-            case 'string':
-              if (propDefault != null) {
-                attrDefault = '@Default(\'${propDefault.toString()}\') ';
-              }
-              attrType = 'String?';
-              break;
-            default:
-              attrType = 'String?';
+        if (propDefault != null) {
+          if (attrIsEnum) {
+            attrDefault = '@Default($propRef.${propDefault.toString()}) ';
+          } else {
+            attrDefault = '@Default(${propDefault.toString()}) ';
           }
+        }
+
+        switch (propType) {
+          case 'integer':
+            attrType = 'int?';
+            break;
+          case 'string':
+            attrType = 'String?';
+            break;
+          case 'enum':
+            attrType = propRef!;
+            break;
+          default:
+            attrType = 'String?';
         }
 
         result.add(MustacheAttribute(
@@ -105,7 +110,7 @@ class SchemaManager {
   void generateFiles() {
     try {
       for (var schema in schemes) {
-        final attrs = mustacheAttributes(schema.name);
+        final attrs = mustacheAttributes(schema);
         print(attrs);
         writeMustacheFile(
           MustacheArgs(

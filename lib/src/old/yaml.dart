@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:openapi_model_cli/src/gen_model.dart';
+import 'package:openapi_model_cli/src/old/gen_model.dart';
 import 'package:yaml/yaml.dart';
 
-import 'env.dart';
+import '../env.dart';
 
 class YamlHelper {
   final Env env;
