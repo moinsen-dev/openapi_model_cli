@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:mustache_template/mustache.dart';
 import 'package:yaml/yaml.dart';
 
-import 'env.dart';
+import '../env.dart';
 
 class GenModel {
   GenModel(this.env, this.name, this.data);
@@ -115,6 +115,8 @@ class {{ className }} extends BaseModel with _{{ dollarClassName }} {
         // TODO Handle propFormat date-time
 
         // TODO Gen enum type
+
+        // TODO Support more types
 
         if (propRef != null) {
           final ref = propRef.split('/').last;

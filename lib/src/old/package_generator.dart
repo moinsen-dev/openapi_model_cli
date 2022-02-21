@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 
-import 'env.dart';
+import '../env.dart';
 
 typedef VoidCallback = Function();
 
