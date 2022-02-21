@@ -64,14 +64,14 @@ class SchemaManager {
         if (propRef != null) {
           propRefSchema = byName(propRef);
           attrIsEnum = propRefSchema.isEnum;
-          propType = 'enum';
+          if (attrIsEnum) {
+            propType = 'enum';
+          } else {
+            propType = 'reference';
+          }
         }
 
         // TODO Handle propFormat date-time
-
-        // TODO Gen enum type
-
-        // TODO Support more types
 
         if (propDefault != null) {
           if (attrIsEnum) {
@@ -90,6 +90,9 @@ class SchemaManager {
             break;
           case 'enum':
             attrType = propRef!;
+            break;
+          case 'reference':
+            attrType = '$propRef?';
             break;
           default:
             attrType = 'String?';
